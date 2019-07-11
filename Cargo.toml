@@ -5,3 +5,5 @@ authors = ["maks"]
 edition = "2018"
 
 [dependencies]
+
+criterion = "0.2.11"
