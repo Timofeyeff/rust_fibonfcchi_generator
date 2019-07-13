@@ -3,6 +3,12 @@ use std::f64;
 use std::time::Instant;
 
 fn main() {
+    let fns = vec![
+        (fib_close as fn(u64) -> u64, 94u64, "по замкнутой формуле", "разрядности не хватает"),
+        (fib_recursive as fn(u64) -> u64, 45u64, "методом классической рекурсии", "слишком долго"),
+        (fib_tail_recursive as fn(u64) -> u64, 93u64, "методом хвостовой рекурссии", "буфер переполню"),
+        (fib_memory as fn(u64) -> u64, 93u64, "методом динамического программирования", "буфер переполню")
+    ];
     println!("Привет!");
     println!("Данная программа вычисляет вычисляет числа Фибоначчи");
     println!("Пожалуйста введите количество чисел в последовательности:");
@@ -17,55 +23,19 @@ fn main() {
                 continue;
             },
         };
-        println!("");
-        println!("Вычисляю число по замкнутой формуле");
-        if guess < 94 {
-            let sys_time = Instant::now();
-            let fib = fib_close(guess);
-            let difference = sys_time.elapsed();
-            println!("Время выполнения функции: {:?}", difference);
-            println!("Полученное значение: {}", fib);
-        } else {
-            println!("Не хочу считать - разрядности не хватает, хочу печеньку!");
+        for (func, max, form, err) in fns {
+            println!("");
+            println!("Вычисляю число по {}", form);
+            if guess < max {
+                let sys_time = Instant::now();
+                let fib = func(guess);
+                let difference = sys_time.elapsed();
+                println!("Время выполнения функции: {:?}", difference);
+                println!("Полученное значение: {}", fib);
+            } else {
+                println!("Не хочу считать - {}, хочу печеньку!", err);
+            }
         }
-        println!("");
-        
-        println!("Вычисляю число методом классичекой рекурсии");
-        if guess < 45 {
-            let sys_time = Instant::now();
-            let fib = fib_recursive(guess);
-            let difference = sys_time.elapsed();
-            println!("Время выполнения функции: {:?}", difference);
-            println!("Полученное значение: {}", fib);
-        } else {
-            println!("Не хочу считать - слишком долго, хочу печеньку!");
-        }
-        println!("");
-        
-        println!("Вычисляю число методом хвостовой рекурсии");
-        if guess < 93 {
-            let sys_time = Instant::now();
-            let fib = fib_tail_recursive(guess);
-            let difference = sys_time.elapsed();
-            println!("Время выполнения функции: {:?}", difference);
-            println!("Полученное значение: {}", fib);
-        } else {
-            println!("Не хочу считать - буфер переполню, хочу печеньку!");
-        }
-        println!("");
-        
-        println!("Вычисляю число методом динамического программирования");
-        //let mut vec_fib: Vec<u64> = vec![0, 1];
-        if guess < 93 {
-            let sys_time = Instant::now();
-            let fib = fib_memory(guess);
-            let difference = sys_time.elapsed();
-            println!("Время выполнения функции: {:?}", difference);
-            println!("Полученное значение: {}", fib);
-        } else {
-            println!("Не хочу считать - буфер переполню, хочу печеньку!");
-        }
-        println!("");
         
         break;
     }
